@@ -27,14 +27,14 @@ class ScalarConverter
         static bool iswordkey(const std::string &literal); //done = should remvoe
         static void convertFromChar(char c); //done
         static void convertFromInt(long l); //done
-        static void convertFromFloat(float f); //done
+        static void convertFromFloat(float f, const std::string &literal); //done
         static void convertFromDouble(double d); //done
 
         static bool isPrintableChar(int c); //done
         static bool fitsInIntRange(double l); //done
         static bool fitsInCharRange(double c); //done
 
-        static void printChar(int c, bool possible, bool printable); //done
+        static void printChar(char c, bool possible, bool printable); //done
         static void printInt(long l, bool possible);  //done
         static void printFloat(float f, bool possible); //done
         static void printDouble(double d, bool possible); //done

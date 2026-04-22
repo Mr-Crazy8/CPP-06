@@ -1,0 +1,64 @@
+--------------------------------------------------------------------------------------------------
+anel-men@e3r7p17 ex00 % ./a.out 2147483649.0 
+char: impossible
+int: impossible
+float: 2.14748e+09.0f
+double: 2.14748e+09.0
+
+x.y.z incorrect the output have 2 .
+--------------------------------------------------------------------------------------------------
+anel-men@e3r7p17 ex00 % ./a.out 99999999999999999999999999999999999999.0f 
+char: impossible
+int: impossible
+float: 1e+38.0f
+double: 1e+38.0
+anel-men@e3r7p17 ex00 % ./a.out 999999999999999999999999999999999999999.0f
+char: impossible
+int: impossible
+float: inff
+double: inf
+anel-men@e3r7p17 ex00 % 
+
+the range of float is less then the range of double so float should show inff befor the double
+--------------------------------------------------------------------------------------------------
+
+
+
+we enter char store in char and in the other types use casting the same for others int store in int .....
+
+
+
+
+
+---------------------------------------------------------------------------
+
+anel-men@e3r7p17 ex00 % ./a.out 1.                                        
+char: Non displayable
+int: 1
+float: 1.0f
+double: 1.0
+anel-men@e3r7p17 ex00 % ./a.out .1
+char: impossible
+int: impossible
+float: 0.1f
+double: 0.1
+anel-men@e3r7p17 ex00 % ./a.out 0.1
+char: impossible
+int: impossible
+float: 0.1f
+double: 0.1
+anel-men@e3r7p17 ex00 % ./a.out 0. 
+char: Non displayable
+int: 0
+float: 0.0f
+double: 0.0
+anel-men@e3r7p17 ex00 % ./a.out 1.f
+char: Non displayable
+int: 1
+float: 1.0f
+double: 1.0
+anel-men@e3r7p17 ex00 % ./a.out    
+
+
+
+. should not be at the start or the end

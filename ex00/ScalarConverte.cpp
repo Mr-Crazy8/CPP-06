@@ -1,5 +1,7 @@
 #include "ScalarConverte.hpp"
-
+#include <iostream>
+#include <sstream>
+#include <string>
 
 ScalarConverter::ScalarConverter() {}
 
@@ -67,10 +69,17 @@ void ScalarConverter::printFloat(float f, bool possible)
         std::cout << "float: inff" << std::endl;
     else if (f == -1.0f/0.0f)
         std::cout << "float: -inff" << std::endl;
-    else if (f == std::floor(f))
-        std::cout << "float: " << f << ".0f" << std::endl;
     else 
-        std::cout << "float: " << f << "f" << std::endl;
+    {
+        //len calcul
+        std::ostringstream h;
+        h  << std::fixed << std::setprecision(1) << f;
+        std::string s = h.str();
+        if (s.find('.') == std::string::npos)
+            std::cout << "float: "  << s << ".0f" << std::endl;
+        else
+            std::cout << "float: "  << s << "f" << std::endl;
+    }
 
 }
 
@@ -85,22 +94,28 @@ void ScalarConverter::printDouble(double d, bool possible)
         std::cout << "double: inf" << std::endl;
     else if (d == -1.0/0.0)
         std::cout << "double: -inf" << std::endl;
-    else if (d == std::floor(d))
-        std::cout << "double: " << d << ".0" << std::endl;
     else 
-        std::cout << "double: " << d  << std::endl;
+    {
+        std::ostringstream h;
+        h  << std::fixed << std::setprecision(1) << d;
+        std::string s = h.str();
+        if (s.find('.') == std::string::npos)
+            std::cout << "double: "  << s << ".0" << std::endl;
+        else
+            std::cout << "double: " << s << std::endl;
+    }
 
 }
 
 
-void ScalarConverter::printChar(int c, bool possible, bool printable)
+void ScalarConverter::printChar(char c, bool possible, bool printable)
 {
     if (possible == false)
         std::cout << "char: impossible" << std::endl;
     else if (possible == true && printable == false)
         std::cout << "char: Non displayable" << std::endl;
     else if (possible == true && printable == true) 
-        std::cout << "char: " << "'" << static_cast<char>(c) << "'" << std::endl;
+        std::cout << "char: " << "'" << c << "'" << std::endl;
 }
 
 
@@ -108,8 +123,7 @@ void ScalarConverter::printChar(int c, bool possible, bool printable)
 void ScalarConverter::convertFromChar(char c)
 {
     int v = static_cast<int>(c);
-
-    printChar(v, true, isPrintableChar(v));
+    printChar(c, true, isPrintableChar(c));
     printInt(v, true);
     printFloat(static_cast<float>(v), true);
     printDouble(static_cast<double>(v), true);
@@ -132,7 +146,7 @@ void ScalarConverter::convertFromInt(long l)
 
 }
 
-void ScalarConverter::convertFromFloat(float f)
+void ScalarConverter::convertFromFloat(float f, const std::string &literal)
 {
     bool inrange = fitsInIntRange(static_cast<double>(f));
     bool char_range = fitsInCharRange(static_cast<double>(f));
@@ -144,7 +158,7 @@ void ScalarConverter::convertFromFloat(float f)
     printChar(static_cast<int>(f), char_range , printable);
     printInt(static_cast<long>(f), inrange);
     printFloat(f, true);
-    printDouble(static_cast<double>(f), true);
+    printDouble(strtod(literal.c_str(), NULL), true);
 }
 
 
@@ -167,7 +181,7 @@ void ScalarConverter::convertFromDouble(double d)
 
 bool ScalarConverter::isChar(const std::string &literal)
 {
-    return (literal.length() == 3 && literal[0] == '\'' && literal[2] == '\'');
+    return (literal.length() == 1 && !std::isdigit(literal[0]));
 }
 
 bool ScalarConverter::iswordkey(const std::string &literal)
@@ -210,7 +224,7 @@ bool ScalarConverter::isFloat(const std::string & literal)
 
 bool ScalarConverter::isDouble(const std::string & literal)
 {
-    if (literal.empty())
+    if (literal.empty() || literal[0] == '.' || literal[literal.length() - 1] == '.')
         return false;
 
     int lent = literal.length();
@@ -219,7 +233,7 @@ bool ScalarConverter::isDouble(const std::string & literal)
     strtod(literal.c_str(), &end);
     if (end != literal.c_str())
     {
-        if ((*end == '\0'))
+        if (*end == '\0')
             return true;
     }
     return false;
@@ -227,7 +241,7 @@ bool ScalarConverter::isDouble(const std::string & literal)
 
 bool ScalarConverter::isInt(const std::string &literal)
 {
-    if (literal.empty())
+    if (literal.empty() || literal[0] == '.' || literal[literal.length() - 1] == '.')
         return false;
     char *end;
     errno = 0;
@@ -245,11 +259,11 @@ void ScalarConverter::convert(const std::string& literal)
 {
     char *end;
     if(isChar(literal))
-        convertFromChar(literal[1]);
+        convertFromChar(literal[0]);
     else if (isInt(literal))
         convertFromInt(strtol(literal.c_str(), &end, 10));
     else if (isFloat(literal))
-        convertFromFloat(strtof(literal.c_str(), &end));
+        convertFromFloat(strtof(literal.c_str(), &end), literal);
     else if (isDouble(literal))
         convertFromDouble(strtod(literal.c_str(), &end));
     else 
