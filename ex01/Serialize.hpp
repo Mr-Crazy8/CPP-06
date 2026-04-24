@@ -2,7 +2,6 @@
 #define SERIALIZE_HPP
 
 #include "Data.hpp"
-#include <cstdint>
 
 class Serializer
 {
